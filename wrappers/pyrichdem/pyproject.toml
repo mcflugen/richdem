@@ -29,8 +29,9 @@ LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w 
 archs = "x86_64,arm64"
 before-all = "brew install gdal libomp"
 environment ="""
-RICHDEM_PREFIX="$(pwd -P)/_inst"
-OMP_PREFIX="$(brew --prefix libomp)"
+export MACOSX_DEPLOYMENT_TARGET=11.0
+export RICHDEM_PREFIX="$(pwd -P)/_inst"
+export OMP_PREFIX="$(brew --prefix libomp)"
 
 export CPPFLAGS="-I$OMP_PREFIX/include ${CPPFLAGS:-}"
 export LDFLAGS="-L$OMP_PREFIX/lib -Wl,-rpath,$OMP_PREFIX/lib ${LDFLAGS:-}"
