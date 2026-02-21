@@ -1,0 +1,28 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build-type: [Release]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2.1
+
+      - name: Build richdem
+        run: |
+          mkdir _build && cd _build
+          cmake -S .. -DCMAKE_INSTALL_PREFIX=../_inst -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=ON
+          make all install
