@@ -3,6 +3,59 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  build-wheels:
+    # Run on external PRs, but not on internal PRs, to avoid duplicate runs
+    if:
+      github.event_name == 'push' || github.event.pull_request.head.repo.full_name !=
+      github.repository
+
+    name: Build wheels on ${{ matrix.cibw-only }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cibw-only: cp310-manylinux_x86_64 }
+          - { os: ubuntu-latest, cibw-only: cp311-manylinux_x86_64 }
+          - { os: ubuntu-latest, cibw-only: cp312-manylinux_x86_64 }
+          - { os: ubuntu-latest, cibw-only: cp313-manylinux_x86_64 }
+          - { os: ubuntu-latest, cibw-only: cp314-manylinux_x86_64 }
+
+          - { os: ubuntu-24.04-arm, cibw-only: cp310-manylinux_aarch64 }
+          - { os: ubuntu-24.04-arm, cibw-only: cp311-manylinux_aarch64 }
+          - { os: ubuntu-24.04-arm, cibw-only: cp312-manylinux_aarch64 }
+          - { os: ubuntu-24.04-arm, cibw-only: cp313-manylinux_aarch64 }
+          - { os: ubuntu-24.04-arm, cibw-only: cp314-manylinux_aarch64 }
+
+          - { os: macos-15-intel, cibw-only: cp310-macosx_x86_64, mac_deployment: "10.9" }
+          - { os: macos-15-intel, cibw-only: cp311-macosx_x86_64, mac_deployment: "10.9" }
+          - { os: macos-15-intel, cibw-only: cp312-macosx_x86_64, mac_deployment: "10.9" }
+          - { os: macos-15-intel, cibw-only: cp313-macosx_x86_64, mac_deployment: "10.9" }
+          - { os: macos-15-intel, cibw-only: cp314-macosx_x86_64, mac_deployment: "10.9" }
+
+          - { os: macos-latest, cibw-only: cp310-macosx_arm64, mac_deployment: "11.0" }
+          - { os: macos-latest, cibw-only: cp311-macosx_arm64, mac_deployment: "11.0" }
+          - { os: macos-latest, cibw-only: cp312-macosx_arm64, mac_deployment: "11.0" }
+          - { os: macos-latest, cibw-only: cp313-macosx_arm64, mac_deployment: "11.0" }
+          - { os: macos-latest, cibw-only: cp314-macosx_arm64, mac_deployment: "11.0" }
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Use Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v2.1
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.3
+        with:
+          package-dir: wrappers/pyrichdem
+          only: ${{ matrix.cibw-only }}
+
   build:
     runs-on: ${{ matrix.os }}
 
