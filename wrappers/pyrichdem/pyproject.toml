@@ -27,4 +27,4 @@ LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w 
 
 [tool.cibuildwheel.macos]
 archs = "x86_64,arm64"
-before-all = "brew install gdal"
+before-all = "brew install gdal libomp"
