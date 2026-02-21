@@ -17,9 +17,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v2.1
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          micromamba-version: "latest"
+          environment-name: richdem
+          create-args: >-
+            gdal
+            compilers
+            cmake
+          cache-environment: true
 
       - name: Build richdem
         run: |
