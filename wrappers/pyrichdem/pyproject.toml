@@ -1,2 +1,30 @@
 [build-system]
 requires = ["pybind11", "numpy", "setuptools", "wheel"]
+
+[tool.cibuildwheel]
+build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = "*-win* *-manylinux_i686* *-musllinux_i686*"
+environment = """
+RICHDEM_PREFIX="$(pwd -P)/_inst"
+"""
+before-build = [
+    "mkdir -p _build",
+	"cd _build",
+    "cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=ON"
+    "make",
+    "make install",
+]
+test-command = """
+python -c "import richdem; print(richdem.__version__)"
+"""
+
+[tool.cibuildwheel.linux]
+archs = "x86_64,aarch64"
+before-all = "yum install -y gdal"
+repair-wheel-command = """
+LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w {dest_dir} {wheel}
+"""
+
+[tool.cibuildwheel.macos]
+archs = "x86_64,arm64"
+before-all = "brew install gdal"
