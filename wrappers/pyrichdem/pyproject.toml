@@ -20,7 +20,7 @@ python -c "import richdem; print(richdem.__version__)"
 
 [tool.cibuildwheel.linux]
 archs = "x86_64,aarch64"
-before-all = "yum install -y gdal"
+before-all = "yum install -y gdal gdal-devel"
 repair-wheel-command = """
 LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w {dest_dir} {wheel}
 """
