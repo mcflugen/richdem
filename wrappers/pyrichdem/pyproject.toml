@@ -4,9 +4,6 @@ requires = ["pybind11", "numpy", "setuptools", "wheel"]
 [tool.cibuildwheel]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 skip = "*-win* *-manylinux_i686* *-musllinux_i686*"
-environment = """
-RICHDEM_PREFIX="$(pwd -P)/_inst"
-"""
 before-build = """
 mkdir -p _build
 cd _build
@@ -23,6 +20,9 @@ archs = "x86_64,aarch64"
 before-all = "yum install -y gdal gdal-devel"
 repair-wheel-command = """
 LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w {dest_dir} {wheel}
+"""
+environment = """
+RICHDEM_PREFIX="$(pwd -P)/_inst"
 """
 
 [tool.cibuildwheel.macos]
