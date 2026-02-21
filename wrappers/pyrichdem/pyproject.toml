@@ -7,13 +7,13 @@ skip = "*-win* *-manylinux_i686* *-musllinux_i686*"
 environment = """
 RICHDEM_PREFIX="$(pwd -P)/_inst"
 """
-before-build = [
-    "mkdir -p _build",
-	"cd _build",
-    "cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=ON"
-    "make",
-    "make install",
-]
+before-build = """
+mkdir -p _build
+cd _build
+cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=ON
+make
+make install
+"""
 test-command = """
 python -c "import richdem; print(richdem.__version__)"
 """
