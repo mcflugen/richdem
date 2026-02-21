@@ -24,6 +24,8 @@ except ModuleNotFoundError:
     except Exception:
         GDAL_AVAILABLE = False
 
+__version__ = version("richdem")
+
 STANDARD_GEOTRANSFORM: Final[np.ndarray] = np.array([0, 1, 0, 0, 0, -1])
 
 msg_error_no_data: Final[str] = "The source data did not have a NoData value. Please use the no_data argument to specify one. If should not be equal to any of the actual data values. If you are using all possible data values, then the situation is pretty hopeless - sorry."
