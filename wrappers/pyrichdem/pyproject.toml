@@ -29,12 +29,11 @@ RICHDEM_PREFIX="$(pwd -P)/_inst"
 archs = ["x86_64", "arm64"]
 before-all = "brew install gdal libomp"
 environment = """
-MACOSX_DEPLOYMENT_TARGET=11.0
-RICHDEM_PREFIX={project}/_inst
-OMP_PREFIX=$(brew --prefix libomp)
-
-CPPFLAGS=-I$OMP_PREFIX/include ${CPPFLAGS:-}
-LDFLAGS=-L$OMP_PREFIX/lib -Wl,-rpath,$OMP_PREFIX/lib ${LDFLAGS:-}
-CFLAGS=-Xpreprocessor -fopenmp ${CFLAGS:-}
-CXXFLAGS=-Xpreprocessor -fopenmp ${CXXFLAGS:-}
+MACOSX_DEPLOYMENT_TARGET=11.0 \
+RICHDEM_PREFIX="{project}/_inst" \
+OMP_PREFIX="$(brew --prefix libomp)" \
+CPPFLAGS="-I$OMP_PREFIX/include ${CPPFLAGS:-}" \
+LDFLAGS="-L$OMP_PREFIX/lib -Wl,-rpath,$OMP_PREFIX/lib ${LDFLAGS:-}" \
+CFLAGS="-Xpreprocessor -fopenmp ${CFLAGS:-}" \
+CXXFLAGS="-Xpreprocessor -fopenmp ${CXXFLAGS:-}"
 """
