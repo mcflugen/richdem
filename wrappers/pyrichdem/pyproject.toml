@@ -28,12 +28,22 @@ RICHDEM_PREFIX="$(pwd -P)/_inst"
 [tool.cibuildwheel.macos]
 archs = ["x86_64", "arm64"]
 before-all = "brew install gdal libomp"
+before-build = """
+mkdir -p _build
+cd _build
+cmake -S .. \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+  -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CXX_STANDARD=11 \
+  -DUSE_GDAL=ON \
+  -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I${OMP_PREFIX}/include" \
+  -DOpenMP_CXX_LIB_NAMES="omp" \
+  -DOpenMP_omp_LIBRARY="${OMP_PREFIX}/lib/libomp.dylib"
+make -j2
+make install
+"""
 environment = """
-MACOSX_DEPLOYMENT_TARGET=11.0 \
 RICHDEM_PREFIX="{project}/_inst" \
-OMP_PREFIX="$(brew --prefix libomp)" \
-CPPFLAGS="-I$OMP_PREFIX/include ${CPPFLAGS:-}" \
-LDFLAGS="-L$OMP_PREFIX/lib -Wl,-rpath,$OMP_PREFIX/lib ${LDFLAGS:-}" \
-CFLAGS="-Xpreprocessor -fopenmp ${CFLAGS:-}" \
-CXXFLAGS="-Xpreprocessor -fopenmp ${CXXFLAGS:-}"
+OMP_PREFIX="$(brew --prefix libomp)"
 """
