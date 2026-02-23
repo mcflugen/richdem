@@ -69,14 +69,21 @@ class build_ext(_build_ext):
 # Extension module
 # -----------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent
+REPO = ROOT.parent.parent
 
-# Put the extension inside the package so `import richdem._richdem` works.
+pywrapper = ROOT / "src" / "pywrapper.cpp"
+
+cpp_src = REPO / "src"
+cpp_files = sorted(str(p) for p in cpp_src.rglob("*.cpp"))
+
+if not cpp_files:
+    raise RuntimeError(f"No C++ sources found under {cpp_src}")
+
+SRC_FILES = [str(pywrapper), *cpp_files]
+
+
 EXT_NAME = "richdem._richdem"
 
-SRC_FILES = ["src/pywrapper.cpp"] + glob.glob(
-    str(ROOT / "lib" / "richdem" / "src" / "**" / "*.cpp"),
-    recursive=True,
-)
 
 ext_modules = [
     Pybind11Extension(
