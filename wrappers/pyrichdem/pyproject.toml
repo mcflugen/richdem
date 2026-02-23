@@ -68,7 +68,7 @@ skip = "*-win* *-manylinux_i686* *-musllinux_i686*"
 before-build = """
 mkdir -p _build
 cd _build
-cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=OFF
+cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=OFF -DWITH_TESTS=OFF -DWITH_APPS=OFF
 make
 make install
 """
@@ -97,6 +97,8 @@ cmake -S .. \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_STANDARD=11 \
   -DUSE_GDAL=OFF \
+  -DWITH_TESTS=OFF \
+  -DWITH_APPS=OFF \
   -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I${OMP_PREFIX}/include" \
   -DOpenMP_CXX_LIB_NAMES="omp" \
   -DOpenMP_omp_LIBRARY="${OMP_PREFIX}/lib/libomp.dylib"
