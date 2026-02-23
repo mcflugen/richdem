@@ -74,7 +74,7 @@ REPO = ROOT.parent.parent
 pywrapper = ROOT / "src" / "pywrapper.cpp"
 
 cpp_src = REPO / "src"
-cpp_files = sorted(str(p) for p in cpp_src.rglob("*.cpp"))
+cpp_files = sorted(str(p.relative_to(ROOT)) for p in cpp_src.rglob("*.cpp"))
 
 if not cpp_files:
     raise RuntimeError(f"No C++ sources found under {cpp_src}")
