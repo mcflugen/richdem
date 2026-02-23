@@ -68,7 +68,7 @@ skip = "*-win* *-manylinux_i686* *-musllinux_i686*"
 before-build = """
 mkdir -p _build
 cd _build
-cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=ON
+cmake -S .. -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 -DUSE_GDAL=OFF
 make
 make install
 """
@@ -78,7 +78,6 @@ python -c "import richdem; print(richdem.__version__)"
 
 [tool.cibuildwheel.linux]
 archs = "x86_64,aarch64"
-before-all = "yum install -y gdal gdal-devel"
 repair-wheel-command = """
 LD_LIBRARY_PATH="$RICHDEM_PREFIX/lib:${LD_LIBRARY_PATH:-}" auditwheel repair -w {dest_dir} {wheel}
 """
@@ -88,7 +87,7 @@ RICHDEM_PREFIX="$(pwd -P)/_inst"
 
 [tool.cibuildwheel.macos]
 archs = ["x86_64", "arm64"]
-before-all = "brew install gdal libomp"
+before-all = "brew install libomp"
 before-build = """
 mkdir -p _build
 cd _build
@@ -97,7 +96,7 @@ cmake -S .. \
   -DCMAKE_INSTALL_PREFIX=$RICHDEM_PREFIX \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_STANDARD=11 \
-  -DUSE_GDAL=ON \
+  -DUSE_GDAL=OFF \
   -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -I${OMP_PREFIX}/include" \
   -DOpenMP_CXX_LIB_NAMES="omp" \
   -DOpenMP_omp_LIBRARY="${OMP_PREFIX}/lib/libomp.dylib"
