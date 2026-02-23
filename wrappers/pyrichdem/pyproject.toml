@@ -44,6 +44,6 @@ make -j2
 make install
 """
 environment = """
-RICHDEM_PREFIX="{project}/_inst" \
+RICHDEM_PREFIX="$(pwd -P)/_inst" \
 OMP_PREFIX="$(brew --prefix libomp)"
 """
